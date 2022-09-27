@@ -28,58 +28,79 @@ function NextClock() {
     minute = now.getMinutes();
     second = now.getSeconds();
 
+
+
     day.textContent = days[now.getDay()] + `, `;
     mount.textContent = mounts[now.getMonth()] + `, `;
     data.textContent = dayNumber;
     year.textContent = years + ` року`;
-    
-    hr.textContent = hour + ':';
-    min.textContent = minute;
-    sec.textContent = ':' + second;
 
-    if (Number(hour) >= 12) {
+    hr.textContent = hour + ':';
+
+    if (minute < 10) {
+        min.textContent = `:0` + minute;
+    }
+    else {
+        min.textContent = minute;
+    }
+
+    if (second < 10) {
+        sec.textContent = `:0` + second;
+    }
+    else {
+        sec.textContent = ':' + second;
+    }
+
+    Nhr = Number(hour);
+    Nhr1 = Number(hr1.value);
+    Nmin = Number(min1.value);
+    Nmin1 = Number(minute);
+
+    if (Nhr >= 12) {
         amPm.textContent = "PM";
     }
-    else if(Number(hour) < 12){
+    else if (Nhr < 12) {
         amPm.textContent = "AM";
     }
 
     if (hour <= 10) {
         message = 'Добрий ранок';
-    } else if (Number(hour) <= 18) {
+    } else if (Nhr <= 18) {
         message = 'Доброго дня';
-    } else if(Number(hour) > 18){
+    } else if (Nhr > 18) {
         message = 'Доброго вечора';
     }
     hello.textContent = message + '!';
-    
+
 
     alarm1.onclick = function () {
-        if ((Number(hr1.value) >= Number(hour))) {
-            var hrAlarm = (Number(hr1.value) - Number(hour)) * 3600000;
+        let hrAlarm = 0;
+        let minAlarm = 0;
+        if (Nhr1 >= Nhr) {
+            hrAlarm = (Nhr1 - Nhr) * 3600000;
         }
-        else if ((Number(hr1.value) < Number(hour))) {
-            var hrAlarm = (24 - (Number(hour) - Number(hr1.value))) * 3600000;
-        }
-
-        if ((Number(hr1.value) === Number(hour)) && (Number(min1.value) < Number(minute))) {
-            var hrAlarm = (24 - (Number(hour) - Number(hr1.value))) * 3600000;
-            var minAlarm = (Number(min1.value) - Number(minute)) * 60000;
+        else if (Nhr1 < Nhr) {
+            hrAlarm = (24 - Nhr - Nhr1) * 3600000;
         }
 
-        if ((Number(min1.value) >= Number(minute))) {
-            var minAlarm = (Number(min1.value) - Number(minute)) * 60000;
+        if ((Nhr1 === Nhr) && (Nmin < Nmin1)) {
+            hrAlarm = (24 - Nhr - Nhr1) * 3600000;
+            minAlarm = (Nmin - Nmin1) * 60000;
+        }
+
+        if ((Nmin >= Nmin1)) {
+            minAlarm = (Nmin - Nmin1) * 60000;
         }
 
         let secAlarm = 60000 - Number(second * 1000);
         let sum = hrAlarm + minAlarm + secAlarm - 60000;
 
         function sayHi() {
-            if (Number(hour) <= 10) {
+            if (Nhr <= 10) {
                 audio1.play();
-            } else if (Number(hour) <= 18) {
+            } else if (Nhr <= 18) {
                 audio2.play();
-            } else if(Number(hour) > 18){
+            } else if (Nhr > 18) {
                 audio3.play();
             }
             hello.textContent = message + '!';
